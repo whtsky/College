@@ -7,6 +7,7 @@ import os.path
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
+import motor
 
 import urls
 from init_db import db
@@ -38,6 +39,10 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, urls.handlers, **settings)
 
         self.db = db
+        self.async_db = motor.MotorClient(
+            settings.mongodb_host, settings.mongodb_port
+        )[settings.database_name]
+
 
 def main():
     tornado.options.parse_command_line()
